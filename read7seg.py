@@ -4,6 +4,7 @@
 #
 # TODO: height width or w, h?
 
+import sys
 import cv2
 import numpy as np
 from datetime import datetime as dt
@@ -63,8 +64,6 @@ def contour(frame):
 
     contours, hierarchy = cv2.findContours(binary,cv2.RETR_TREE, \
          cv2.CHAIN_APPROX_NONE)
-#    contours, hierarchy = cv2.findContours(binary,cv2.RETR_TREE, \
-#         cv2.CHAIN_APPROX_SIMPLE)
 
     img_blank = np.ones_like(frame) * 255
     img_contour_only = cv2.drawContours(img_blank, contours, -1, \
@@ -80,12 +79,16 @@ if __name__== "__main__" :
 
 ### camera set ###
 
-    deviceid = 0
-    cap = cv2.VideoCapture(deviceid)
-    timestamp = dt.now()
-    fname =  timestamp.strftime('%Y%m%d%H%M%S') + '.jpg'
-    ret, frame = cap.read()
+#    deviceid = 0
+#    cap = cv2.VideoCapture(deviceid)
+#    timestamp = dt.now()
+#    fname =  timestamp.strftime('%Y%m%d%H%M%S') + '.jpg'
+#    ret, frame = cap.read()
 
+#debug
+# read sample pic
+    frame = cv2.imread(sys.argv[1], cv2.IMREAD_COLOR)
+  
     w,h,c = get_info(frame)
 #debug
     print("height : ",h)
@@ -99,10 +102,17 @@ if __name__== "__main__" :
     img = rot(img,c,theta,scale)
 
 # T1
-    img1 = img[385:455,200:360]
+#    img1 = img[385:455,200:360]
+    img1 = img[:,:]
     h,w,c = get_info(img1)
-    img1 = rot(img1,c,-4.3,1.0)
-    img1 = skew(img1,-4.5)
+
+    theta = -10.0
+    scale -1.0
+    img1 = rot(img1,c,theta,scale)
+
+    skew_alpha = -3.0
+    img1 = skew(img1,skew_alpha)
+
     img1 = contour(img1)
 
     plt.imshow(cv2.cvtColor(img1, cv2.COLOR_BGR2RGB))
